@@ -11,14 +11,14 @@ namespace TargetBot
     static class TargetCommander
     {
         
-        static NetworkCredential auth = new NetworkCredential("Admin", "Admin");
+        static NetworkCredential auth = new NetworkCredential("admin", "sdmin");
         static string baseUrl = "http://sauge.tpondemand.com";
 
         public static string GetStories()
         {
             Console.WriteLine("Retrieving UserStories in current Iteration");
             WebRequest req = WebRequest.Create(baseUrl + "/api/v1/UserStories?where=Iteration.IsCurrent eq 'true'&include=[Id,Tasks,EntityState]&format=json");
-            req.Credentials = auth;
+            req.Credentials = new NetworkCredential("admin", "admin");
             HttpWebResponse resp = req.GetResponse() as HttpWebResponse;
             if (resp.StatusCode == HttpStatusCode.OK)
             {
