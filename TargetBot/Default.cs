@@ -13,6 +13,8 @@ namespace TargetBot
             List<JToken> sortedStories;
             JObject storiesRaw = JsonManipulator.createStories(TargetCommander.GetStories());
             sortedStories = sortStories(storiesRaw);
+            storyIds = selectIds(sortedStories);
+            
             
             
 
@@ -37,7 +39,15 @@ namespace TargetBot
         }
         static int[] selectIds(List<JToken> list)
         {
-            return new int[5];
+            int length = list.Count;
+            int[] ids = new int[length];
+            for (int i = 0; i < length; i++)
+            {
+                ids[i] = Convert.ToInt32(list[i]["Id"]);
+                Console.WriteLine(ids[i]);
+            }
+            
+            return ids;
         }
 
 
