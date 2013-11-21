@@ -27,8 +27,8 @@ namespace TargetBot
                 foreach (var story in sortedStories)
                 {
                     if (Convert.ToInt32(story["EntityState"]["Id"]) == openStateStory || Convert.ToInt32(story["EntityState"]["Id"]) == inProgressStateStory)
-                    {
-                        updateStories(story);
+                    {                        
+                        JsonManipulator.sortTasks(story);
                     }
                     else
                     {
@@ -48,9 +48,7 @@ namespace TargetBot
             }            
             return ids;
         }
-        static void updateStories(JToken story)
-        {
-        }
+
     }
 }
 

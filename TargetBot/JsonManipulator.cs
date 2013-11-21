@@ -39,5 +39,15 @@ namespace TargetBot
                         new JProperty("Id", state.ToString()))));
             return entity;
         }
+        public static List<JToken> sortTasks(JToken story)
+        {
+            List<JToken> tasks = new List<JToken>();
+
+            foreach (var task in story["Tasks"]["Items"])
+            {
+                tasks.Add(task);
+            }
+            return tasks;
+        }
     }
 }
