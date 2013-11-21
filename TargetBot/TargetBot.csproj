@@ -48,7 +48,6 @@
     <Compile Include="TargetCommander.cs" />
     <Compile Include="Default.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="UserStory.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

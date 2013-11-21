@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,15 @@ namespace TargetBot
 {
     static class JsonManipulator
     {
-        //public static string 
+        public static JObject createStories(string json)
+        {
+            return JObject.Parse(json);
+        }
+
+        public static string createJson(JObject json)
+        {
+            return json.ToString();
+        }
         
 
     }
