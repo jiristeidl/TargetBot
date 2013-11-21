@@ -19,6 +19,20 @@ namespace TargetBot
         {
             return json.ToString();
         }
+        public static List<JToken> sortStories(JObject stories)
+        {
+            List<JToken> storiesWithTasks = new List<JToken>();
+            foreach (var story in stories["Items"])
+            {
+
+                //Console.WriteLine(story["Tasks"]["Items"]);
+                if (story["Tasks"]["Items"].ToString() != "[]")
+                {
+                    storiesWithTasks.Add(story);
+                }
+            }
+            return storiesWithTasks;
+        }
         
 
     }

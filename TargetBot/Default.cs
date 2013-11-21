@@ -11,23 +11,10 @@ namespace TargetBot
             int[] storyIds;
             List<JToken> sortedStories;
             JObject storiesRaw = JsonManipulator.createStories(TargetCommander.GetStories());
-            sortedStories = sortStories(storiesRaw);
+            sortedStories = JsonManipulator.sortStories(storiesRaw);
             storyIds = selectIds(sortedStories);
         }
-        static List<JToken> sortStories(JObject stories)
-        {
-            List<JToken> storiesWithTasks = new List<JToken>();
-            foreach (var story in stories["Items"])
-            {
-                
-                //Console.WriteLine(story["Tasks"]["Items"]);
-                if (story["Tasks"]["Items"].ToString() != "[]")
-                {
-                    storiesWithTasks.Add(story);
-                }
-            }
-            return storiesWithTasks;
-        }
+        
         static int[] selectIds(List<JToken> list)
         {
             int length = list.Count;
