@@ -13,6 +13,7 @@ namespace TargetBot
             JObject storiesRaw = JsonManipulator.createStories(TargetCommander.GetStories());
             sortedStories = JsonManipulator.sortStories(storiesRaw);
             storyIds = selectIds(sortedStories);
+            
         }
         
         static int[] selectIds(List<JToken> list)

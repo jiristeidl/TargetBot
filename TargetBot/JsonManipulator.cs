@@ -14,7 +14,6 @@ namespace TargetBot
         {
             return JObject.Parse(json);
         }
-
         public static string createJson(JObject json)
         {
             return json.ToString();
@@ -33,7 +32,14 @@ namespace TargetBot
             }
             return storiesWithTasks;
         }
-        
+        public static JObject createJsonForStateChange(int state)
+        {
+            JObject entity = new JObject(
+                new JProperty("EntityState",
+                    new JObject(
+                        new JProperty("Id", state.ToString()))));
 
+            return entity;
+        }
     }
 }
