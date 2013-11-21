@@ -7,21 +7,12 @@ namespace TargetBot
     class Program
     {
         static void Main(string[] args)
-        {            
-            int stories = 0;
+        {
             int[] storyIds;
             List<JToken> sortedStories;
             JObject storiesRaw = JsonManipulator.createStories(TargetCommander.GetStories());
             sortedStories = sortStories(storiesRaw);
             storyIds = selectIds(sortedStories);
-            
-            
-            
-
-            
-
-            
-            
         }
         static List<JToken> sortStories(JObject stories)
         {
@@ -44,13 +35,10 @@ namespace TargetBot
             for (int i = 0; i < length; i++)
             {
                 ids[i] = Convert.ToInt32(list[i]["Id"]);
-                Console.WriteLine(ids[i]);
-            }
-            
+                
+            }            
             return ids;
         }
-
-
     }
 }
 
