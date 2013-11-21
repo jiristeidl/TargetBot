@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace TargetBot
 {
@@ -9,14 +10,33 @@ namespace TargetBot
         static void Main(string[] args)
         {
             int[] storyIds;
+            int[][] tasks;
             List<JToken> sortedStories;
-            int inProgressState = 47;
-            int testingState = 48;
-
-            JObject storiesRaw = JsonManipulator.createStories(TargetCommander.GetStories());
-            sortedStories = JsonManipulator.sortStories(storiesRaw);
-            storyIds = selectIds(sortedStories);            
-        }        
+            int openStateStory = 46;
+            int inProgressStateStory = 47;
+            int testingStateStory = 48;
+            int inProgressStateTask = 51;
+            int doneStateTask = 52;
+            
+           // JObject  taskInfo = JsonManipulator.createStories(TargetCommander.GetTaskState(Convert.ToInt32(sortedStories[0]["Tasks"]["Items"][0]["Id"])));
+            //Console.WriteLine(taskInfo["EntityState"]["Id"]);
+            //while (true)
+            //{
+                JObject storiesRaw = JsonManipulator.createStories(TargetCommander.GetStories());
+                sortedStories = JsonManipulator.sortStories(storiesRaw);
+                foreach (var story in sortedStories)
+                {
+                    if (Convert.ToInt32(story["EntityState"]["Id"]) == openStateStory || Convert.ToInt32(story["EntityState"]["Id"]) == inProgressStateStory)
+                    {
+                        updateStories(story);
+                    }
+                    else
+                    {
+                        Thread.Sleep(1000);
+                    }
+                }
+            //}
+        }
         static int[] selectIds(List<JToken> list)
         {
             int length = list.Count;
@@ -27,6 +47,9 @@ namespace TargetBot
                 
             }            
             return ids;
+        }
+        static void updateStories(JToken story)
+        {
         }
     }
 }

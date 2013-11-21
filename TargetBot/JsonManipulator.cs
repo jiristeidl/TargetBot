@@ -23,7 +23,6 @@ namespace TargetBot
             List<JToken> storiesWithTasks = new List<JToken>();
             foreach (var story in stories["Items"])
             {
-
                 //Console.WriteLine(story["Tasks"]["Items"]);
                 if (story["Tasks"]["Items"].ToString() != "[]")
                 {
@@ -38,7 +37,6 @@ namespace TargetBot
                 new JProperty("EntityState",
                     new JObject(
                         new JProperty("Id", state.ToString()))));
-
             return entity;
         }
     }
