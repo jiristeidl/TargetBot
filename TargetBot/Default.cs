@@ -12,11 +12,14 @@ namespace TargetBot
             int[] storyIds;
             int[][] tasks;
             List<JToken> sortedStories;
+            List<JToken> sortedTasks;
+            
             int openStateStory = 46;
             int inProgressStateStory = 47;
+            /*
             int testingStateStory = 48;
             int inProgressStateTask = 51;
-            int doneStateTask = 52;
+            int doneStateTask = 52;*/
             
            // JObject  taskInfo = JsonManipulator.createStories(TargetCommander.GetTaskState(Convert.ToInt32(sortedStories[0]["Tasks"]["Items"][0]["Id"])));
             //Console.WriteLine(taskInfo["EntityState"]["Id"]);
@@ -28,7 +31,14 @@ namespace TargetBot
                 {
                     if (Convert.ToInt32(story["EntityState"]["Id"]) == openStateStory || Convert.ToInt32(story["EntityState"]["Id"]) == inProgressStateStory)
                     {                        
-                        JsonManipulator.sortTasks(story);
+                        sortedTasks = JsonManipulator.sortTasks(story);                        
+                        foreach (var task in sortedTasks)
+                        {
+                            if (Convert.ToInt32(story["EntityState"]["Id"]) == openStateStory)
+                            {
+
+                            }                          
+                        }
                     }
                     else
                     {
