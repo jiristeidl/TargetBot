@@ -36,7 +36,7 @@ namespace TargetBot
                         {
                             if (Convert.ToInt32(story["EntityState"]["Id"]) == openStateStory)
                             {
-
+                                if (taskIsInProgress(task)) ;
                             }                          
                         }
                     }
@@ -57,6 +57,10 @@ namespace TargetBot
                 
             }            
             return ids;
+        }
+        static bool taskIsInProgress(JToken task)
+        {
+            return false;
         }
 
     }
