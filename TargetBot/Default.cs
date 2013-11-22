@@ -36,7 +36,10 @@ namespace TargetBot
                         {
                             if (Convert.ToInt32(story["EntityState"]["Id"]) == openStateStory)
                             {
-                                if (taskIsInProgress(task)) ;
+                                if (taskIsInProgress(task))
+                                {
+                                    TargetCommander.UpdateStoryState(JsonManipulator.createJsonForStateChange(inProgressStateStory), Convert.ToInt32(story["Id"]));
+                                }
                             }                          
                         }
                     }

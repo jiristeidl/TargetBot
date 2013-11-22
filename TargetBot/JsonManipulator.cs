@@ -14,10 +14,6 @@ namespace TargetBot
         {
             return JObject.Parse(json);
         }
-        public static string createJson(JObject json)
-        {
-            return json.ToString();
-        }
         public static List<JToken> sortStories(JObject stories)
         {
             List<JToken> storiesWithTasks = new List<JToken>();

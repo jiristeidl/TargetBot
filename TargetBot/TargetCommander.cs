@@ -76,7 +76,7 @@ namespace TargetBot
                 return null;
             }            
         }
-        public static void UpdateStoryState(JObject json, int id)
+        public static void UpdateStoryState(JToken json, int id)
         {
             Console.WriteLine("Updating story " + id);
             WebRequest req = WebRequest.Create(baseUrl + "/api/v1/UserStories/" + id);
