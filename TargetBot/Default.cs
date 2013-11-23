@@ -62,8 +62,13 @@ namespace TargetBot
             return ids;
         }
         static bool taskIsInProgress(JToken task)
-        {
-            return false;
+        {            
+            bool change = false;
+            int openState = 50;
+
+            JObject state = JsonManipulator.createStories(TargetCommander.GetTaskState(Convert.ToInt32(task["Id"])));
+            if (Convert.ToInt32(state["EntityState"]["Id"]) != openState) change = true;            
+            return change;
         }
 
     }
