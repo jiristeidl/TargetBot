@@ -55,10 +55,31 @@ namespace TargetBot
             }            
 
         }
+        public static string GetAllBugsId(JToken story)
+        {
+            Console.WriteLine("Retrieving All bugs for story " + story["Id"]);
+            WebRequest req = WebRequest.Create(baseUrl + "/api/v1/Userstories/" + story["Id"] + "?include=[Bugs]&format=json");
+            req.Credentials = auth;
+            HttpWebResponse resp = req.GetResponse() as HttpWebResponse;
+            if (resp.StatusCode == HttpStatusCode.OK)
+            {
+                using (Stream respStream = resp.GetResponseStream())
+                {
+                    StreamReader reader = new StreamReader(respStream, Encoding.UTF8);
+                    Console.WriteLine("Success!");
+                    return reader.ReadToEnd();
+                }
+            }
+            else
+            {
+                Console.WriteLine(string.Format("Status Code: {0}, Status Description: {1}", resp.StatusCode, resp.StatusDescription));
+                return null;
+            }
+        }
         public static string GetBugState(int id)
         {
             Console.WriteLine("Retrieving state for bug " + id);
-            WebRequest req = WebRequest.Create(baseUrl + "/api/v1/Tasks/" + id + "?include=[EntityState]&format=json");
+            WebRequest req = WebRequest.Create(baseUrl + "/api/v1/Bugs/" + id + "?include=[EntityState]&format=json");
             req.Credentials = auth;
             HttpWebResponse resp = req.GetResponse() as HttpWebResponse;
             if (resp.StatusCode == HttpStatusCode.OK)
