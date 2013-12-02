@@ -14,7 +14,7 @@ namespace TargetBot
 
         public static string GetStories()
         {
-            Console.WriteLine("Retrieving UserStories in current Iteration");
+            //Console.WriteLine("Retrieving UserStories in current Iteration");
             WebRequest req = WebRequest.Create(baseUrl + "/api/v1/UserStories?where=Iteration.IsCurrent eq 'true'&include=[Id,Tasks,EntityState]&format=json");
             req.Credentials = auth;
             HttpWebResponse resp = req.GetResponse() as HttpWebResponse;
@@ -23,7 +23,7 @@ namespace TargetBot
                 using (Stream respStream = resp.GetResponseStream())
                 {
                     StreamReader reader = new StreamReader(respStream, Encoding.UTF8);
-                    Console.WriteLine("Success!");
+                    //Console.WriteLine("Success!");
                     return reader.ReadToEnd();
                 }
             }
