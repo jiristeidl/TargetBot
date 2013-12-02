@@ -37,8 +37,7 @@ namespace TargetBot
                             }
                         }
                         if (Convert.ToInt32(story["EntityState"]["Id"]) == inProgressStateStory)
-                        {
-                            Console.WriteLine(TargetCommander.GetAllBugsId(story));
+                        {                            
                             if (allTasksAreDone(sortedTasks) && noOpenBugs(story))
                             {
                                 TargetCommander.UpdateStoryState(JsonManipulator.createJsonForStateChange(testingStateStory), Convert.ToInt32(story["Id"]));
