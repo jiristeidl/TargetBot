@@ -45,7 +45,7 @@ namespace TargetBot
                         }
                     }
                 }
-                Thread.Sleep(1000);
+                Thread.Sleep(30000);
             }
         }
         static int[] selectIds(List<JToken> list)

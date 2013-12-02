@@ -9,8 +9,8 @@ namespace TargetBot
     static class TargetCommander
     {
         
-        static NetworkCredential auth = new NetworkCredential("admin", "admin");
-        static string baseUrl = "http://sauge.tpondemand.com";
+        static NetworkCredential auth = new NetworkCredential("JSteidl@moravia.com", "drf351gh");
+        static string baseUrl = "http://moravia.tpondemand.com";
 
         public static string GetStories()
         {
