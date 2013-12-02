@@ -35,7 +35,7 @@ namespace TargetBot
         }
         public static string GetTaskState(int id)
         {
-            Console.WriteLine("Retrieving state for task " + id);
+            //Console.WriteLine("Retrieving state for task " + id);
             WebRequest req = WebRequest.Create(baseUrl + "/api/v1/Tasks/" + id + "?include=[EntityState]&format=json");
             req.Credentials = auth;
             HttpWebResponse resp = req.GetResponse() as HttpWebResponse;
@@ -44,7 +44,7 @@ namespace TargetBot
                 using (Stream respStream = resp.GetResponseStream())
                 {
                     StreamReader reader = new StreamReader(respStream, Encoding.UTF8);
-                    Console.WriteLine("Success!");
+                    //Console.WriteLine("Success!");
                     return reader.ReadToEnd();
                 }
             }

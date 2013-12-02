@@ -15,7 +15,7 @@ namespace TargetBot
 
             int openStateStory = 46;
             int inProgressStateStory = 47;
-            int testingStateStory = 48;
+            int testingStateStory = 68;
 
             while (true)
             {
@@ -44,6 +44,7 @@ namespace TargetBot
                             }
                         }
                     }
+                    Thread.Sleep(500);
                 }
                 Thread.Sleep(30000);
             }
