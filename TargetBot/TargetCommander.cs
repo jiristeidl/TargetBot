@@ -17,6 +17,7 @@ namespace TargetBot
             //Console.WriteLine("Retrieving UserStories in current Iteration");
             WebRequest req = WebRequest.Create(baseUrl + "/api/v1/UserStories?where=Iteration.IsCurrent eq 'true'&include=[Id,Tasks,EntityState]&format=json");
             req.Credentials = auth;
+            req.Timeout = 30000;
             HttpWebResponse resp = req.GetResponse() as HttpWebResponse;
             if (resp.StatusCode == HttpStatusCode.OK)
             {
