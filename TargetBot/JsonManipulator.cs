@@ -12,20 +12,34 @@ namespace TargetBot
     {
         public static JObject createStories(string json)
         {
-            return JObject.Parse(json);
+            if (json != null)
+            {
+                return JObject.Parse(json);
+            }
+            else
+            {
+                return null;
+            }
         }
         public static List<JToken> sortStories(JObject stories)
         {
             List<JToken> storiesWithTasks = new List<JToken>();
-            foreach (var story in stories["Items"])
+            if (stories != null)
             {
-                //Console.WriteLine(story["Tasks"]["Items"]);
-                if (story["Tasks"]["Items"].ToString() != "[]")
+                foreach (var story in stories["Items"])
                 {
-                    storiesWithTasks.Add(story);
+                    //Console.WriteLine(story["Tasks"]["Items"]);
+                    if (story["Tasks"]["Items"].ToString() != "[]")
+                    {
+                        storiesWithTasks.Add(story);
+                    }
                 }
+                return storiesWithTasks;
             }
-            return storiesWithTasks;
+            else
+            {
+                return null;
+            }
         }
         public static JObject createJsonForStateChange(int state)
         {

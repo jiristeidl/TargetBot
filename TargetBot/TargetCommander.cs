@@ -18,7 +18,7 @@ namespace TargetBot
             WebRequest req = WebRequest.Create(baseUrl + "/api/v1/UserStories?where=Iteration.IsCurrent eq 'true'&include=[Id,Tasks,EntityState]&format=json");
             req.Credentials = auth;
             try
-            {
+            {                
                 HttpWebResponse resp = req.GetResponse() as HttpWebResponse;
                 if (resp.StatusCode == HttpStatusCode.OK)
                 {

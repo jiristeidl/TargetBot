@@ -21,32 +21,39 @@ namespace TargetBot
             {
                 JObject storiesRaw = JsonManipulator.createStories(TargetCommander.GetStories());
                 sortedStories = JsonManipulator.sortStories(storiesRaw);
-                foreach (var story in sortedStories)
+                if (sortedStories != null)
                 {
-                    if (Convert.ToInt32(story["EntityState"]["Id"]) == openStateStory || Convert.ToInt32(story["EntityState"]["Id"]) == inProgressStateStory)
+                    foreach (var story in sortedStories)
                     {
-                        sortedTasks = JsonManipulator.sortTasks(story);
-                        foreach (var task in sortedTasks)
+                        if (Convert.ToInt32(story["EntityState"]["Id"]) == openStateStory || Convert.ToInt32(story["EntityState"]["Id"]) == inProgressStateStory)
                         {
-                            if (Convert.ToInt32(story["EntityState"]["Id"]) == openStateStory)
+                            sortedTasks = JsonManipulator.sortTasks(story);
+                            foreach (var task in sortedTasks)
                             {
-                                if (taskIsInProgress(task))
+                                if (Convert.ToInt32(story["EntityState"]["Id"]) == openStateStory)
                                 {
-                                    TargetCommander.UpdateStoryState(JsonManipulator.createJsonForStateChange(inProgressStateStory), Convert.ToInt32(story["Id"]));
+                                    if (taskIsInProgress(task))
+                                    {
+                                        TargetCommander.UpdateStoryState(JsonManipulator.createJsonForStateChange(inProgressStateStory), Convert.ToInt32(story["Id"]));
+                                    }
+                                }
+                            }
+                            if (Convert.ToInt32(story["EntityState"]["Id"]) == inProgressStateStory)
+                            {
+                                if (allTasksAreDone(sortedTasks) && noOpenBugs(story))
+                                {
+                                    TargetCommander.UpdateStoryState(JsonManipulator.createJsonForStateChange(testingStateStory), Convert.ToInt32(story["Id"]));
                                 }
                             }
                         }
-                        if (Convert.ToInt32(story["EntityState"]["Id"]) == inProgressStateStory)
-                        {                            
-                            if (allTasksAreDone(sortedTasks) && noOpenBugs(story))
-                            {
-                                TargetCommander.UpdateStoryState(JsonManipulator.createJsonForStateChange(testingStateStory), Convert.ToInt32(story["Id"]));
-                            }
-                        }
+                        Thread.Sleep(500);
                     }
-                    Thread.Sleep(500);
+                    Thread.Sleep(30000);
                 }
-                Thread.Sleep(30000);
+                else
+                {
+                    Console.WriteLine("Timeout");
+                }
             }
         }
         static int[] selectIds(List<JToken> list)
