@@ -17,22 +17,28 @@ namespace TargetBot
             //Console.WriteLine("Retrieving UserStories in current Iteration");
             WebRequest req = WebRequest.Create(baseUrl + "/api/v1/UserStories?where=Iteration.IsCurrent eq 'true'&include=[Id,Tasks,EntityState]&format=json");
             req.Credentials = auth;
-            req.Timeout = 30000;
-            HttpWebResponse resp = req.GetResponse() as HttpWebResponse;
-            if (resp.StatusCode == HttpStatusCode.OK)
-            {
-                using (Stream respStream = resp.GetResponseStream())
+            try
+            {                
+                HttpWebResponse resp = req.GetResponse() as HttpWebResponse;
+                if (resp.StatusCode == HttpStatusCode.OK)
                 {
-                    StreamReader reader = new StreamReader(respStream, Encoding.UTF8);
-                    //Console.WriteLine("Success!");
-                    return reader.ReadToEnd();
+                    using (Stream respStream = resp.GetResponseStream())
+                    {
+                        StreamReader reader = new StreamReader(respStream, Encoding.UTF8);
+                        //Console.WriteLine("Success!");
+                        return reader.ReadToEnd();
+                    }
+                }
+                else
+                {
+                    Console.WriteLine(string.Format("Status Code: {0}, Status Description: {1}", resp.StatusCode, resp.StatusDescription));
+                    return null;
                 }
             }
-            else
+            catch
             {
-                Console.WriteLine(string.Format("Status Code: {0}, Status Description: {1}", resp.StatusCode, resp.StatusDescription));
                 return null;
-            }            
+            }
         }
         public static string GetTaskState(int id)
         {
