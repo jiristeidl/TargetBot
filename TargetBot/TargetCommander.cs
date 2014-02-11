@@ -35,8 +35,9 @@ namespace TargetBot
                     return null;
                 }
             }
-            catch
+            catch ( WebException e)
             {
+                Console.WriteLine(e.Message);
                 return null;
             }
         }

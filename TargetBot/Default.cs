@@ -49,11 +49,7 @@ namespace TargetBot
                         Thread.Sleep(500);
                     }
                     Thread.Sleep(30000);
-                }
-                else
-                {
-                    Console.WriteLine("Timeout");
-                }
+                }                
             }
         }
         static int[] selectIds(List<JToken> list)
