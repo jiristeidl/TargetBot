@@ -91,12 +91,12 @@ namespace TargetBot
         }
         static bool noOpenBugs(JToken story)
         {
-            JObject bugs = JsonManipulator.createStories(TargetCommander.GetAllBugsId(story));
-            if (bugs["Bugs"]["Items"].ToString() == "[]")
-            {
-                return true;
-            }
-            return false;
+            //JObject bugs = JsonManipulator.createStories(TargetCommander.GetAllBugsId(story));
+            //if (bugs["Bugs"]["Items"].ToString() == "[]")
+            //{
+            //    return true;
+            //}
+            return true;
         }        
     }
 }
