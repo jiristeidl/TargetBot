@@ -16,6 +16,7 @@ namespace TargetBot
             int openStateStory = 46;
             int inProgressStateStory = 47;
             int testingStateStory = 68;
+            int doneStateTask = 52;
 
             while (true)
             {
@@ -35,7 +36,11 @@ namespace TargetBot
                                     if (taskIsInProgress(task))
                                     {
                                         TargetCommander.UpdateStoryState(JsonManipulator.createJsonForStateChange(inProgressStateStory), Convert.ToInt32(story["Id"]));
-                                    }
+                                    }                                    
+                                }
+                                if (taskIsToBeTested(task))
+                                {                                    
+                                    TargetCommander.UpdateTaskState(JsonManipulator.createJsonForStateChange(doneStateTask), Convert.ToInt32(task["Id"]));
                                 }
                             }
                             if (Convert.ToInt32(story["EntityState"]["Id"]) == inProgressStateStory)
@@ -97,7 +102,16 @@ namespace TargetBot
             //    return true;
             //}
             return true;
-        }        
+        }
+        static bool taskIsToBeTested(JToken task)
+        {
+            bool change = false;
+            int toBeTestedState = 97;
+
+            JObject state = JsonManipulator.createStories(TargetCommander.GetTaskState(Convert.ToInt32(task["Id"])));
+            if (Convert.ToInt32(state["EntityState"]["Id"]) == toBeTestedState) change = true;
+            return change;
+        }
     }
 }
 

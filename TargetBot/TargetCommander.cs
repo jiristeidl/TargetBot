@@ -120,6 +120,20 @@ namespace TargetBot
             HttpWebResponse resp = req.GetResponse() as HttpWebResponse;
             Console.WriteLine(string.Format("Status Code: {0}, Status Description: {1}", resp.StatusCode, resp.StatusDescription));            
         }
-
+        public static void UpdateTaskState(JObject json, int id)
+        {
+            Console.WriteLine("Updating task " + id);
+            WebRequest req = WebRequest.Create(baseUrl + "/api/v1/Tasks/" + id);
+            req.Credentials = auth;
+            req.Method = "POST";
+            req.ContentType = @"application/json; charset=utf-8";
+            req.ContentLength = Encoding.UTF8.GetByteCount(json.ToString());
+            using (Stream stream = req.GetRequestStream())
+            {
+                stream.Write(Encoding.UTF8.GetBytes(json.ToString()), 0, Encoding.UTF8.GetByteCount(json.ToString()));
+            }
+            HttpWebResponse resp = req.GetResponse() as HttpWebResponse;
+            Console.WriteLine(string.Format("Status Code: {0}, Status Description: {1}", resp.StatusCode, resp.StatusDescription));      
+        }
     }
 }
