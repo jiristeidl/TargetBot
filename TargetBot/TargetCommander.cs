@@ -10,7 +10,7 @@ namespace TargetBot
     {
         
         static NetworkCredential auth = new NetworkCredential("JSteidl@moravia.com", "drf351gh");
-        static string baseUrl = "http://moravia.tpondemand.com";
+        static string baseUrl = "https://moravia.tpondemand.com";
 
         public static string GetStories()
         {
