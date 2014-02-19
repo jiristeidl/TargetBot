@@ -45,22 +45,30 @@ namespace TargetBot
         {
             //Console.WriteLine("Retrieving state for task " + id);
             WebRequest req = WebRequest.Create(baseUrl + "/api/v1/Tasks/" + id + "?include=[EntityState]&format=json");
-            req.Credentials = auth;
-            HttpWebResponse resp = req.GetResponse() as HttpWebResponse;
-            if (resp.StatusCode == HttpStatusCode.OK)
+            req.Credentials = auth;            
+            try
             {
-                using (Stream respStream = resp.GetResponseStream())
+                HttpWebResponse resp = req.GetResponse() as HttpWebResponse;
+                if (resp.StatusCode == HttpStatusCode.OK)
                 {
-                    StreamReader reader = new StreamReader(respStream, Encoding.UTF8);
-                    //Console.WriteLine("Success!");
-                    return reader.ReadToEnd();
+                    using (Stream respStream = resp.GetResponseStream())
+                    {
+                        StreamReader reader = new StreamReader(respStream, Encoding.UTF8);
+                        //Console.WriteLine("Success!");
+                        return reader.ReadToEnd();
+                    }
+                }
+                else
+                {
+                    Console.WriteLine(string.Format("Status Code: {0}, Status Description: {1}", resp.StatusCode, resp.StatusDescription));
+                    return null;
                 }
             }
-            else
+            catch (WebException e)
             {
-                Console.WriteLine(string.Format("Status Code: {0}, Status Description: {1}", resp.StatusCode, resp.StatusDescription));
+                Console.WriteLine(e.Message);
                 return null;
-            }            
+            }
 
         }
         public static string GetAllBugsId(JToken story)
@@ -68,19 +76,27 @@ namespace TargetBot
             Console.WriteLine("Retrieving All bugs for story " + story["Id"]);
             WebRequest req = WebRequest.Create(baseUrl + "/api/v1/Userstories/" + story["Id"] + "?include=[Bugs]&format=json");
             req.Credentials = auth;
-            HttpWebResponse resp = req.GetResponse() as HttpWebResponse;
-            if (resp.StatusCode == HttpStatusCode.OK)
+            try
             {
-                using (Stream respStream = resp.GetResponseStream())
+                HttpWebResponse resp = req.GetResponse() as HttpWebResponse;
+                if (resp.StatusCode == HttpStatusCode.OK)
                 {
-                    StreamReader reader = new StreamReader(respStream, Encoding.UTF8);
-                    Console.WriteLine("Success!");
-                    return reader.ReadToEnd();
+                    using (Stream respStream = resp.GetResponseStream())
+                    {
+                        StreamReader reader = new StreamReader(respStream, Encoding.UTF8);
+                        Console.WriteLine("Success!");
+                        return reader.ReadToEnd();
+                    }
+                }
+                else
+                {
+                    Console.WriteLine(string.Format("Status Code: {0}, Status Description: {1}", resp.StatusCode, resp.StatusDescription));
+                    return null;
                 }
             }
-            else
+            catch (WebException e)
             {
-                Console.WriteLine(string.Format("Status Code: {0}, Status Description: {1}", resp.StatusCode, resp.StatusDescription));
+                Console.WriteLine(e.Message);
                 return null;
             }
         }

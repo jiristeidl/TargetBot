@@ -73,7 +73,7 @@ namespace TargetBot
             int openState = 50;
 
             JObject state = JsonManipulator.createStories(TargetCommander.GetTaskState(Convert.ToInt32(task["Id"])));
-            if (Convert.ToInt32(state["EntityState"]["Id"]) != openState) change = true;            
+            if (state != null && Convert.ToInt32(state["EntityState"]["Id"]) != openState) change = true;            
             return change;
         }
         static bool allTasksAreDone(List<JToken> tasks)
@@ -83,7 +83,7 @@ namespace TargetBot
             for (int i=0; i < tasks.Count;i++ )
             {
                 JObject task = JsonManipulator.createStories(TargetCommander.GetTaskState(Convert.ToInt32(tasks[i]["Id"])));                
-                if (Convert.ToInt32(task["EntityState"]["Id"]) == doneStateTask)
+                if (task != null && Convert.ToInt32(task["EntityState"]["Id"]) == doneStateTask)
                 {
                     tasksDone[i]=true;
                 }
@@ -109,7 +109,7 @@ namespace TargetBot
             int toBeTestedState = 97;
 
             JObject state = JsonManipulator.createStories(TargetCommander.GetTaskState(Convert.ToInt32(task["Id"])));
-            if (Convert.ToInt32(state["EntityState"]["Id"]) == toBeTestedState) change = true;
+            if (state != null && Convert.ToInt32(state["EntityState"]["Id"]) == toBeTestedState) change = true;
             return change;
         }
     }
