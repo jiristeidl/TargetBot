@@ -3,153 +3,97 @@ using System;
 using System.IO;
 using System.Net;
 using System.Text;
+using RestSharp;
+using TargetBot.Models;
+
 
 namespace TargetBot
 {
-    static class TargetCommander
+    internal static class TargetCommander
     {
-        
-        static NetworkCredential auth = new NetworkCredential("JSteidl@moravia.com", "drf351gh");
-        static string baseUrl = "https://moravia.tpondemand.com";
+        private static string baseUrl = "https://moravia.tpondemand.com";
 
-        public static string GetStories()
+        public static string GetAllBugsForUserStory(JToken story)
         {
-            //Console.WriteLine("Retrieving UserStories in current Iteration");
-            WebRequest req = WebRequest.Create(baseUrl + "/api/v1/UserStories?where=Iteration.IsCurrent eq 'true'&include=[Id,Tasks,EntityState]&format=json");
-            req.Credentials = auth;
-            try
-            {                
-                HttpWebResponse resp = req.GetResponse() as HttpWebResponse;
-                if (resp.StatusCode == HttpStatusCode.OK)
-                {
-                    using (Stream respStream = resp.GetResponseStream())
-                    {
-                        StreamReader reader = new StreamReader(respStream, Encoding.UTF8);
-                        //Console.WriteLine("Success!");
-                        return reader.ReadToEnd();
-                    }
-                }
-                else
-                {
-                    Console.WriteLine(string.Format("Status Code: {0}, Status Description: {1}", resp.StatusCode, resp.StatusDescription));
-                    return null;
-                }
-            }
-            catch ( WebException e)
-            {
-                Console.WriteLine(e.Message);
-                return null;
-            }
-        }
-        public static string GetTaskState(int id)
-        {
-            //Console.WriteLine("Retrieving state for task " + id);
-            WebRequest req = WebRequest.Create(baseUrl + "/api/v1/Tasks/" + id + "?include=[EntityState]&format=json");
-            req.Credentials = auth;            
-            try
-            {
-                HttpWebResponse resp = req.GetResponse() as HttpWebResponse;
-                if (resp.StatusCode == HttpStatusCode.OK)
-                {
-                    using (Stream respStream = resp.GetResponseStream())
-                    {
-                        StreamReader reader = new StreamReader(respStream, Encoding.UTF8);
-                        //Console.WriteLine("Success!");
-                        return reader.ReadToEnd();
-                    }
-                }
-                else
-                {
-                    Console.WriteLine(string.Format("Status Code: {0}, Status Description: {1}", resp.StatusCode, resp.StatusDescription));
-                    return null;
-                }
-            }
-            catch (WebException e)
-            {
-                Console.WriteLine(e.Message);
-                return null;
-            }
+            var resource = string.Format("/api/v1/Userstories/{0}?include=[Bugs]&format=json", story["Id"]);
 
+            return SendGETRequest(resource).Content;
         }
-        public static string GetAllBugsId(JToken story)
-        {
-            Console.WriteLine("Retrieving All bugs for story " + story["Id"]);
-            WebRequest req = WebRequest.Create(baseUrl + "/api/v1/Userstories/" + story["Id"] + "?include=[Bugs]&format=json");
-            req.Credentials = auth;
-            try
-            {
-                HttpWebResponse resp = req.GetResponse() as HttpWebResponse;
-                if (resp.StatusCode == HttpStatusCode.OK)
-                {
-                    using (Stream respStream = resp.GetResponseStream())
-                    {
-                        StreamReader reader = new StreamReader(respStream, Encoding.UTF8);
-                        Console.WriteLine("Success!");
-                        return reader.ReadToEnd();
-                    }
-                }
-                else
-                {
-                    Console.WriteLine(string.Format("Status Code: {0}, Status Description: {1}", resp.StatusCode, resp.StatusDescription));
-                    return null;
-                }
-            }
-            catch (WebException e)
-            {
-                Console.WriteLine(e.Message);
-                return null;
-            }
-        }
+
         public static string GetBugState(int id)
         {
-            Console.WriteLine("Retrieving state for bug " + id);
-            WebRequest req = WebRequest.Create(baseUrl + "/api/v1/Bugs/" + id + "?include=[EntityState]&format=json");
-            req.Credentials = auth;
-            HttpWebResponse resp = req.GetResponse() as HttpWebResponse;
-            if (resp.StatusCode == HttpStatusCode.OK)
-            {
-                using (Stream respStream = resp.GetResponseStream())
-                {
-                    StreamReader reader = new StreamReader(respStream, Encoding.UTF8);
-                    Console.WriteLine("Success!");
-                    return reader.ReadToEnd();
-                }
-            }
-            else
-            {
-                Console.WriteLine(string.Format("Status Code: {0}, Status Description: {1}", resp.StatusCode, resp.StatusDescription));
-                return null;
-            }            
+            var resource = string.Format("/api/v1/Bugs/{0}?include=[EntityState]&format=json", id);
+
+            return SendGETRequest(resource).Content;
         }
-        public static void UpdateStoryState(JToken json, int id)
+
+        public static string GetEntityStates()
         {
-            Console.WriteLine("Updating story " + id);
-            WebRequest req = WebRequest.Create(baseUrl + "/api/v1/UserStories/" + id);
-            req.Credentials = auth;
-            req.Method = "POST";
-            req.ContentType = @"application/json; charset=utf-8";
-            req.ContentLength = Encoding.UTF8.GetByteCount(json.ToString());
-            using (Stream stream = req.GetRequestStream())
-            {
-                stream.Write(Encoding.UTF8.GetBytes(json.ToString()), 0, Encoding.UTF8.GetByteCount(json.ToString()));
-            }
-            HttpWebResponse resp = req.GetResponse() as HttpWebResponse;
-            Console.WriteLine(string.Format("Status Code: {0}, Status Description: {1}", resp.StatusCode, resp.StatusDescription));            
+            var resource = "/api/v1/EntityStates?format=json&where=Process.Name eq 'Scrum'";
+
+            return SendGETRequest(resource).Content;
         }
-        public static void UpdateTaskState(JObject json, int id)
+
+        public static string GetStoriesForCurrentIteration()
         {
-            Console.WriteLine("Updating task " + id);
-            WebRequest req = WebRequest.Create(baseUrl + "/api/v1/Tasks/" + id);
-            req.Credentials = auth;
-            req.Method = "POST";
-            req.ContentType = @"application/json; charset=utf-8";
-            req.ContentLength = Encoding.UTF8.GetByteCount(json.ToString());
-            using (Stream stream = req.GetRequestStream())
+            var resource = "/api/v1/UserStories?where=Iteration.IsCurrent eq 'true'&format=json&append=[bugs-count,tasks-count]";
+
+            return SendGETRequest(resource).Content;
+        }
+
+        public static string GetTasksForUserStory(int storyId)
+        {
+            var resource = string.Format("/api/v1/Tasks?where=UserStory.Id eq '{0}'&format=json", storyId);
+
+            return SendGETRequest(resource).Content;
+        }
+
+        public static void UpdateStory(UserStory story)
+        {
+            var resource = string.Format("/api/v1/UserStories/{0}", story.Id);
+
+            RestResponse response = SendPOSTRequest(resource, story);
+
+            Console.WriteLine(string.Format("Updated story id:{0} and it was {1}", story.Id, response.StatusCode));
+        }
+
+        public static void UpdateTask(Task task)
+        {
+            var resource = string.Format("/api/v1/Tasks/{0}", task.Id);
+
+            RestResponse response = SendPOSTRequest(resource, task);
+
+            Console.WriteLine(string.Format("Updated task id:{0} and it was {1}", task.Id, response.StatusCode));
+        }
+
+        private static RestResponse ExecuteRequest(RestRequest request)
+        {
+            var client = new RestClient(baseUrl);
+            client.Authenticator = new HttpBasicAuthenticator("jsteidl@moravia.com", "drf351gh");
+            RestResponse response = client.Execute(request) as RestResponse;
+            if (!response.StatusCode.Equals(HttpStatusCode.OK))
             {
-                stream.Write(Encoding.UTF8.GetBytes(json.ToString()), 0, Encoding.UTF8.GetByteCount(json.ToString()));
+                throw new HttpListenerException((int)response.StatusCode, response.StatusDescription);
             }
-            HttpWebResponse resp = req.GetResponse() as HttpWebResponse;
-            Console.WriteLine(string.Format("Status Code: {0}, Status Description: {1}", resp.StatusCode, resp.StatusDescription));      
+            return response;
+        }
+
+        private static RestResponse SendGETRequest(string resource)
+        {
+            var request = new RestRequest(resource, Method.GET);
+            RestResponse response = ExecuteRequest(request);
+            return response;
+        }
+
+        private static RestResponse SendPOSTRequest(string resource, object body)
+        {
+            var request = new RestRequest(resource, Method.POST);
+            request.JsonSerializer = new JsonSerializer();
+            request.RequestFormat = DataFormat.Json;
+            request.AddBody(body);
+
+            RestResponse response = ExecuteRequest(request);
+            return response as RestResponse;
         }
     }
 }
